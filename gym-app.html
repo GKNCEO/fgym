@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>GKN Gym</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="GKN Gym">
+<meta name="theme-color" content="#0c0d10">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%230c0d10'/%3E%3Ctext x='90' y='118' font-family='Arial Black,Arial' font-size='90' font-weight='900' fill='%23d8ff3e' text-anchor='middle'%3EG%3C/text%3E%3C/svg%3E">
+<link rel="manifest" href="data:application/json,%7B%22name%22%3A%22GKN%20Gym%22%2C%22short_name%22%3A%22GKN%20Gym%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230c0d10%22%2C%22theme_color%22%3A%22%230c0d10%22%2C%22start_url%22%3A%22.%22%7D">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&display=swap');
+  :root{--bg:#0c0d10;--bg2:#15171c;--card:#1a1d24;--card2:#21252e;--line:#2b303b;
+    --txt:#f4f5f7;--mut:#8a909c;--acc:#d8ff3e;--acc2:#a6ff00;--warn:#ffb95c;--done:#7ee787;}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{overscroll-behavior-y:none;}
+  body{background:var(--bg);color:var(--txt);font-family:'Archivo',sans-serif;min-height:100vh;padding-bottom:96px;
+    background-image:radial-gradient(circle at 20% -10%, rgba(166,255,0,.08), transparent 40%);padding-top:env(safe-area-inset-top);}
+  header{padding:22px 18px 16px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--bg2),var(--bg));position:sticky;top:0;z-index:30;backdrop-filter:blur(8px);}
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand .dot{width:11px;height:11px;border-radius:50%;background:var(--acc);box-shadow:0 0 12px var(--acc);}
+  .brand h1{font-family:'Anton',sans-serif;font-size:26px;letter-spacing:.5px;font-weight:400;text-transform:uppercase;}
+  .brand h1 span{color:var(--acc);}
+  .sub{color:var(--mut);font-size:12.5px;margin-top:4px;letter-spacing:.3px;}
+  .tabs{display:flex;gap:8px;overflow-x:auto;padding:14px 18px 4px;scrollbar-width:none;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{flex:0 0 auto;background:var(--card);border:1px solid var(--line);color:var(--mut);padding:9px 15px;border-radius:12px;font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer;transition:.18s;display:flex;flex-direction:column;gap:1px;align-items:flex-start;line-height:1.1;}
+  .tab b{font-family:'Anton',sans-serif;font-weight:400;font-size:15px;letter-spacing:.5px;color:var(--txt);}
+  .tab small{font-size:10.5px;}
+  .tab.active{background:var(--acc);border-color:var(--acc);color:#0c0d10;}
+  .tab.active b,.tab.active small{color:#0c0d10;}
+  .pwrap{padding:14px 18px 6px;}
+  .ptrack{height:7px;background:var(--card2);border-radius:99px;overflow:hidden;}
+  .pfill{height:100%;width:0;background:linear-gradient(90deg,var(--acc2),var(--acc));border-radius:99px;transition:width .4s;}
+  .plabel{display:flex;justify-content:space-between;margin-top:7px;font-size:12px;color:var(--mut);}
+  .plabel b{color:var(--acc);}
+  main{padding:6px 14px 0;}
+  .daytitle{font-family:'Anton',sans-serif;font-weight:400;font-size:21px;letter-spacing:.5px;padding:12px 4px 4px;text-transform:uppercase;}
+  .daytitle em{color:var(--mut);font-size:13px;font-style:normal;font-family:'Archivo';font-weight:500;text-transform:none;}
+  .ex{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:11px;transition:.2s;}
+  .ex.done{border-color:rgba(126,231,135,.4);background:linear-gradient(180deg,rgba(126,231,135,.06),var(--card));}
+  .ex .top{display:flex;align-items:flex-start;gap:12px;}
+  .exinfo{flex:1;min-width:0;}
+  .exname{font-size:15px;font-weight:700;line-height:1.25;}
+  .extags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;align-items:center;}
+  .muscle{font-size:10px;font-weight:700;letter-spacing:.3px;padding:3px 7px;border-radius:6px;background:var(--card2);color:var(--acc);text-transform:uppercase;}
+  .sets{font-size:12px;color:var(--mut);font-weight:600;}
+  .why{font-size:11.5px;color:var(--mut);margin-top:7px;line-height:1.4;}
+  /* per-set rows */
+  .setlist{margin-top:12px;display:flex;flex-direction:column;gap:7px;}
+  .setrow{display:flex;align-items:center;gap:9px;}
+  .setchk{flex:0 0 auto;width:28px;height:28px;border-radius:8px;border:2px solid var(--line);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;}
+  .setchk svg{width:14px;height:14px;opacity:0;transform:scale(.5);transition:.15s;}
+  .setrow.on .setchk{background:var(--done);border-color:var(--done);}
+  .setrow.on .setchk svg{opacity:1;transform:scale(1);}
+  .setlbl{font-size:11px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.4px;width:42px;flex:0 0 auto;}
+  .setrow.on .setlbl{color:var(--done);}
+  .setw{flex:1;background:var(--bg);border:1px solid var(--line);border-radius:8px;color:var(--txt);font-family:'Archivo';font-size:14px;font-weight:600;padding:7px 10px;outline:none;transition:.15s;min-width:0;}
+  .setw:focus{border-color:var(--acc);}
+  .setw::placeholder{color:#4a505c;font-weight:500;}
+  .info-card{background:rgba(120,170,255,.08);border:1px solid rgba(120,170,255,.25);border-radius:13px;padding:11px 13px;margin-bottom:11px;font-size:12.5px;color:#bcd4ff;line-height:1.5;}
+  .warn-card{background:rgba(255,185,92,.09);border:1px solid rgba(255,185,92,.3);border-radius:13px;padding:11px 13px;margin-bottom:11px;font-size:12.5px;color:var(--warn);line-height:1.5;}
+  /* bodyweight */
+  .bw-now{display:flex;gap:10px;align-items:flex-end;margin-bottom:14px;}
+  .bw-field{flex:1;}
+  .bw-field label{font-size:11px;color:var(--mut);font-weight:600;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:6px;}
+  .bw-add{background:var(--acc);color:#0c0d10;border:none;border-radius:9px;padding:9px 16px;font-family:'Archivo';font-weight:700;font-size:14px;cursor:pointer;}
+  .winput{background:var(--bg);border:1px solid var(--line);border-radius:9px;color:var(--txt);font-family:'Archivo';font-size:14px;font-weight:600;padding:9px 11px;outline:none;width:100%;}
+  .winput:focus{border-color:var(--acc);}
+  .goalbar{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px;}
+  .goalrow{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);margin-bottom:8px;}
+  .goalrow b{color:var(--acc);font-size:18px;font-family:'Anton';font-weight:400;}
+  .bw-list{display:flex;flex-direction:column;gap:7px;}
+  .bw-item{display:flex;justify-content:space-between;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 13px;font-size:13px;}
+  .bw-item .d{color:var(--mut);}
+  .bw-item .v{font-weight:700;}
+  .bw-del{background:none;border:none;color:#5a6070;cursor:pointer;font-size:16px;padding:0 4px;}
+  .empty{text-align:center;color:var(--mut);font-size:13px;padding:24px;}
+  .actions{position:fixed;bottom:0;left:0;right:0;padding:13px 16px calc(13px + env(safe-area-inset-bottom));background:linear-gradient(0deg,var(--bg) 70%,transparent);display:flex;gap:10px;z-index:30;max-width:760px;margin:0 auto;}
+  .btn{flex:1;border:none;border-radius:13px;padding:14px;font-family:'Archivo';font-weight:700;font-size:14px;cursor:pointer;transition:.18s;display:flex;align-items:center;justify-content:center;gap:7px;}
+  .btn-done{background:var(--acc);color:#0c0d10;}
+  .btn-done:active{transform:scale(.97);}
+  .btn-timer{flex:0 0 auto;background:var(--card);color:var(--txt);border:1px solid var(--line);padding:14px 16px;}
+  .btn-reset{flex:0 0 auto;background:var(--card);color:var(--mut);border:1px solid var(--line);padding:14px 16px;}
+  .wrap{max-width:760px;margin:0 auto;}
+  .toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--acc);color:#0c0d10;padding:11px 20px;border-radius:12px;font-weight:700;font-size:13px;opacity:0;transition:.3s;z-index:50;pointer-events:none;box-shadow:0 8px 30px rgba(0,0,0,.4);}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .modal{position:fixed;inset:0;background:rgba(8,9,11,.86);backdrop-filter:blur(6px);z-index:60;display:none;align-items:center;justify-content:center;padding:24px;}
+  .modal.show{display:flex;}
+  .timer-box{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:30px 26px;text-align:center;width:100%;max-width:340px;}
+  .timer-box h3{font-family:'Anton';font-weight:400;font-size:18px;letter-spacing:.5px;text-transform:uppercase;margin-bottom:18px;}
+  .tdisplay{font-family:'Anton';font-weight:400;font-size:72px;color:var(--acc);line-height:1;margin:6px 0 18px;}
+  .tpresets{display:flex;gap:8px;justify-content:center;margin-bottom:18px;}
+  .tpreset{background:var(--card2);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:9px 0;flex:1;font-family:'Archivo';font-weight:700;font-size:14px;cursor:pointer;transition:.15s;}
+  .tpreset.sel{background:var(--acc);color:#0c0d10;border-color:var(--acc);}
+  .tctrls{display:flex;gap:9px;}
+  .tbtn{flex:1;border:none;border-radius:12px;padding:13px;font-family:'Archivo';font-weight:700;font-size:14px;cursor:pointer;}
+  .tstart{background:var(--acc);color:#0c0d10;}
+  .tclose{background:var(--card2);color:var(--mut);border:1px solid var(--line);}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="brand"><div class="dot"></div><h1>GKN <span>GYM</span></h1></div>
+<div class="sub">Per-set tracking · saves on your phone · works online</div></header>
+<div class="tabs" id="tabs"></div>
+<div class="pwrap" id="pwrap"><div class="ptrack"><div class="pfill" id="pfill"></div></div>
+<div class="plabel"><span id="ptext">0 of 0 sets</span><b id="ppct">0%</b></div></div>
+<main id="main"></main>
+</div>
+<div class="actions wrap">
+  <button class="btn btn-reset" id="resetBtn">Reset</button>
+  <button class="btn btn-timer" id="timerBtn">⏱ Rest</button>
+  <button class="btn btn-done" id="doneBtn">✓ All sets</button>
+</div>
+<div class="toast" id="toast"></div>
+<div class="modal" id="modal"><div class="timer-box">
+  <h3>Rest Timer</h3>
+  <div class="tdisplay" id="tdisplay">1:30</div>
+  <div class="tpresets">
+    <button class="tpreset" data-sec="60">60s</button>
+    <button class="tpreset sel" data-sec="90">90s</button>
+    <button class="tpreset" data-sec="120">2m</button>
+    <button class="tpreset" data-sec="180">3m</button>
+  </div>
+  <div class="tctrls"><button class="tbtn tclose" id="tclose">Close</button><button class="tbtn tstart" id="tstart">Start</button></div>
+</div></div>
+
+<script>
+const DATA = [
+  { id:"d1", label:"Day 1", short:"Arms", title:"Arms", note:"Biceps · Triceps · Forearms",
+    ex:[
+      {id:"d1a",n:"Incline dumbbell curl",m:"Bicep long head",s:"3 × 10–12",w:"EMG: best for the peak"},
+      {id:"d1b",n:"Preacher curl",m:"Bicep short head",s:"3 × 10–12",w:"Bias to the inner head = width"},
+      {id:"d1c",n:"Hammer curl",m:"Brachialis",s:"3 × 10–12",w:"Pushes the bicep up = thicker arm"},
+      {id:"d1d",n:"Overhead extension",m:"Tricep long head",s:"3 × 10–12",w:"Full stretch = best long-head growth"},
+      {id:"d1e",n:"Cable pushdown (V-bar)",m:"Tricep lateral",s:"3 × 12",w:"Best lateral-head isolation"},
+      {id:"d1f",n:"Rope pushdown",m:"Tricep medial",s:"3 × 12–15",w:"Rope hits more medial head"},
+      {id:"d1g",n:"Wrist curl (palms up)",m:"Forearm inner",s:"3 × 15",w:"Flexors"},
+      {id:"d1h",n:"Reverse curl (palms down)",m:"Forearm outer",s:"3 × 12",w:"Extensors + brachioradialis"},
+    ]},
+  { id:"d2", label:"Day 2", short:"Legs", title:"Legs", note:"Arms rest today",
+    warn:"Heavy Romanian deadlift swapped for leg curl to protect your lower back. Build the squat up gradually, use a belt, stop if it hurts.",
+    ex:[
+      {id:"d2a",n:"Squat (barbell)",m:"Quads",s:"4 × 8–10",w:"EMG: highest activation of all leg exercises"},
+      {id:"d2b",n:"Leg press / hack squat",m:"Quads",s:"3 × 12",w:"Load heavy safely without the lower back"},
+      {id:"d2c",n:"Leg curl (machine)",m:"Hamstrings",s:"3 × 12–15",w:"Back-friendly hamstring isolation"},
+      {id:"d2d",n:"Hip thrust",m:"Glutes",s:"3 × 10–12",w:"Best glute activation in studies"},
+      {id:"d2e",n:"Standing calf raise",m:"Calves",s:"4 × 15",w:"Full stretch at the bottom"},
+    ]},
+  { id:"d3", label:"Day 3", short:"Delts", title:"Shoulders", note:"",
+    ex:[
+      {id:"d3a",n:"Overhead press",m:"Front delt",s:"4 × 8–10",w:"EMG: highest front-delt activation"},
+      {id:"d3b",n:"Lateral raise",m:"Side delt",s:"4 × 12–15",w:"Best isolation = wider shoulders"},
+      {id:"d3c",n:"Reverse fly / rear raise",m:"Rear delt",s:"3 × 15",w:"ACE study: top for the rear delt"},
+      {id:"d3d",n:"Face pulls (cable)",m:"Stability",s:"3 × 15",w:"Shoulder health + posture"},
+    ]},
+  { id:"d4", label:"Day 4", short:"Abs", title:"Abs / Core", note:"Light day — do back stretches too",
+    info:"A strong core means less lower-back pain. This day is extra valuable for you.",
+    ex:[
+      {id:"d4a",n:"Cable crunch",m:"Upper abs",s:"4 × 15",w:"Can be loaded = progression possible"},
+      {id:"d4b",n:"Hanging leg raise",m:"Lower abs",s:"3 × 12–15",w:"Lower belly + grip"},
+      {id:"d4c",n:"Russian twist / side plank",m:"Obliques",s:"3 × 20",w:"Sides of the core"},
+      {id:"d4d",n:"Plank",m:"Deep core",s:"3 × 45–60s",w:"Supports your lower back"},
+    ]},
+  { id:"d5", label:"Day 5", short:"Chest", title:"Chest", note:"",
+    ex:[
+      {id:"d5a",n:"Flat barbell bench press",m:"Mid chest",s:"4 × 8–10",w:"EMG #1 for mass + heavy loading"},
+      {id:"d5b",n:"Incline dumbbell press (~30°)",m:"Upper chest",s:"3 × 10–12",w:"Best for upper chest"},
+      {id:"d5c",n:"Weighted dip (lean forward)",m:"Lower chest",s:"3 × 10–12",w:"Best for the lower chest"},
+      {id:"d5d",n:"Cable crossover / pec deck",m:"Isolation",s:"3 × 12–15",w:"Constant tension, inner chest"},
+    ]},
+  { id:"d6", label:"Day 6", short:"Back", title:"Back", note:"Your weak spot — train smart",
+    warn:"Heavy barbell row and deadlift left out — they load your lower back the most. Chest-supported variant gives almost the same growth.",
+    ex:[
+      {id:"d6a",n:"Pull-up / wide lat pulldown",m:"Lats width",s:"4 × 8–10",w:"EMG: top lat activation = V-taper"},
+      {id:"d6b",n:"Chest-supported row",m:"Mid-back",s:"3 × 10–12",w:"Rhomboids + mid-traps, back unloaded"},
+      {id:"d6c",n:"Single-arm dumbbell row",m:"Lats mass",s:"3 × 10–12",w:"Hand on bench = back unloaded"},
+      {id:"d6d",n:"Back extension (light)",m:"Lower back",s:"3 × 12–15",w:"Strengthens erector spinae gently"},
+    ]},
+  { id:"st", label:"Extra", short:"Stretch", title:"Lower-back Stretches", note:"Daily · 5–8 min", stretch:true,
+    info:"Tight hamstrings + weak glutes are the most common cause of lower-back pain. Recurring work pain? Get it checked by a physio.",
+    ex:[
+      {id:"sta",n:"Knee-to-chest",m:"Step 1",s:"3× / leg · 20s",w:"Glutes + lower back"},
+      {id:"stb",n:"Cat-Cow",m:"Step 2",s:"10× slow",w:"Round and arch the spine"},
+      {id:"stc",n:"Child's pose",m:"Step 3",s:"30–60s",w:"Relax the back"},
+      {id:"std",n:"Pelvic tilt",m:"Step 4",s:"10–15×",w:"Gently rock the pelvis"},
+      {id:"ste",n:"Hamstring stretch",m:"Step 5",s:"3× / leg · 30s",w:"Tight hamstrings = back pain"},
+      {id:"stf",n:"Lying spinal twist",m:"Step 6",s:"20s / side",w:"Glutes / piriformis"},
+    ]},
+  { id:"bw", label:"Body", short:"Weight", title:"Bodyweight Log", note:"Goal: 75–80 kg", bwtab:true, ex:[] },
+  { id:"log", label:"Log", short:"History", title:"My Training Log", logtab:true, ex:[] },
+];
+const CHECK='<svg viewBox="0 0 24 24" fill="none" stroke="#0c0d10" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+const KEY="gkn-gym-v3";
+let state={sets:{},bw:[],history:[],date:"",active:"d1"};
+let current="d1";
+
+function setCount(s){const m=s.match(/^(\d+)/);return m?Math.min(parseInt(m[1]),6):3;}
+function today(){return new Date().toISOString().slice(0,10);}
+function ensure(ex){ if(!state.sets[ex.id]) state.sets[ex.id]={w:[],d:[]};
+  const n=setCount(ex.s); const o=state.sets[ex.id];
+  while(o.w.length<n)o.w.push(""); while(o.d.length<n)o.d.push(false);
+  o.w.length=n; o.d.length=n; }
+
+function load(){
+  try{const r=localStorage.getItem(KEY);if(r)state=JSON.parse(r);}catch(e){}
+  state.sets=state.sets||{};state.bw=state.bw||[];state.history=state.history||[];
+  if(state.date!==today()){ // new day: clear done ticks, keep weights as reference
+    Object.values(state.sets).forEach(o=>{if(o.d)o.d=o.d.map(()=>false);});
+    state.date=today();
+  }
+  current=state.active||"d1";
+  renderTabs();renderView();save();
+}
+function save(){state.date=today();state.active=current;try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+
+function renderTabs(){
+  const t=document.getElementById("tabs");
+  t.innerHTML=DATA.map(d=>`<div class="tab ${d.id===current?'active':''}" data-id="${d.id}"><b>${d.label}</b><small>${d.short}</small></div>`).join("");
+  t.querySelectorAll(".tab").forEach(el=>el.onclick=()=>{current=el.dataset.id;save();renderTabs();renderView();window.scrollTo({top:0,behavior:"smooth"});});
+}
+function renderView(){ if(current==="bw")renderBW(); else if(current==="log")renderLog(); else renderDay(); }
+
+function renderDay(){
+  document.getElementById("pwrap").style.display="";
+  document.getElementById("doneBtn").style.display="";
+  document.getElementById("resetBtn").style.display="";
+  document.getElementById("timerBtn").style.display="";
+  const d=DATA.find(x=>x.id===current);
+  const m=document.getElementById("main");
+  let html=`<div class="daytitle">${d.title}${d.note?` <em>— ${d.note}</em>`:""}</div>`;
+  if(d.info)html+=`<div class="info-card">💡 ${d.info}</div>`;
+  if(d.warn)html+=`<div class="warn-card">⚠ <b>Your situation:</b> ${d.warn}</div>`;
+  d.ex.forEach(e=>{
+    ensure(e);
+    const o=state.sets[e.id];
+    const allDone=o.d.every(x=>x);
+    let setsHtml="";
+    o.d.forEach((dn,i)=>{
+      if(d.stretch){
+        setsHtml+=`<div class="setrow ${dn?'on':''}" data-ex="${e.id}" data-i="${i}">
+          <button class="setchk" data-chk>${CHECK}</button>
+          <span class="setlbl">Set ${i+1}</span>
+          <span style="font-size:13px;color:var(--mut);">done</span></div>`;
+      }else{
+        setsHtml+=`<div class="setrow ${dn?'on':''}" data-ex="${e.id}" data-i="${i}">
+          <button class="setchk" data-chk>${CHECK}</button>
+          <span class="setlbl">Set ${i+1}</span>
+          <input class="setw" data-w value="${o.w[i]||""}" placeholder="weight / reps"></div>`;
+      }
+    });
+    html+=`<div class="ex ${allDone?'done':''}">
+      <div class="top"><div class="exinfo">
+        <div class="exname">${e.n}</div>
+        <div class="extags"><span class="muscle">${e.m}</span><span class="sets">${e.s}</span></div>
+        <div class="why">${e.w}</div>
+      </div></div>
+      <div class="setlist">${setsHtml}</div></div>`;
+  });
+  if(!d.stretch){
+    html+=`<button class="btn btn-done" id="saveLog" style="width:100%;margin:4px 0 16px;">💾 Save this workout to my log</button>`;
+  }
+  m.innerHTML=html;
+  const sv=document.getElementById("saveLog");
+  if(sv)sv.onclick=()=>saveSession(d);
+  m.querySelectorAll(".setrow").forEach(row=>{
+    const ex=row.dataset.ex,i=+row.dataset.i;
+    row.querySelector("[data-chk]").onclick=()=>{state.sets[ex].d[i]=!state.sets[ex].d[i];save();renderDay();};
+    const inp=row.querySelector("[data-w]");
+    if(inp)inp.oninput=()=>{state.sets[ex].w[i]=inp.value;save();};
+  });
+  updateProgress();
+}
+function updateProgress(){
+  const d=DATA.find(x=>x.id===current); if(!d.ex.length)return;
+  let total=0,done=0;
+  d.ex.forEach(e=>{ensure(e);const o=state.sets[e.id];total+=o.d.length;done+=o.d.filter(x=>x).length;});
+  const pct=total?Math.round(done/total*100):0;
+  document.getElementById("pfill").style.width=pct+"%";
+  document.getElementById("ptext").textContent=`${done} of ${total} sets`;
+  document.getElementById("ppct").textContent=pct+"%";
+}
+function renderBW(){
+  document.getElementById("pwrap").style.display="none";
+  document.getElementById("doneBtn").style.display="none";
+  document.getElementById("resetBtn").style.display="none";
+  document.getElementById("timerBtn").style.display="none";
+  const m=document.getElementById("main");
+  const latest=state.bw.length?state.bw[state.bw.length-1].v:70;
+  const pct=Math.max(0,Math.min(100,Math.round((latest-70)/(80-70)*100)));
+  let html=`<div class="daytitle">Bodyweight Log <em>— goal 75–80 kg</em></div>
+    <div class="goalbar"><div class="goalrow"><span>Latest</span><b>${latest} kg</b></div>
+      <div class="ptrack"><div class="pfill" style="width:${pct}%"></div></div>
+      <div class="goalrow" style="margin:8px 0 0;"><span>70 kg start</span><span>80 kg goal</span></div></div>
+    <div class="bw-now"><div class="bw-field"><label>Today's weight (kg)</label>
+      <input class="winput" id="bwInput" type="number" step="0.1" inputmode="decimal" placeholder="e.g. 71.5"></div>
+      <button class="bw-add" id="bwAdd">+ Log</button></div>`;
+  if(!state.bw.length)html+=`<div class="empty">No entries yet. Weigh yourself weekly, same time of day (morning, before eating).</div>`;
+  else html+=`<div class="bw-list">`+[...state.bw].reverse().map((e,i)=>{const ri=state.bw.length-1-i;
+    return `<div class="bw-item"><span class="d">${e.date}</span><span class="v">${e.v} kg <button class="bw-del" data-del="${ri}">✕</button></span></div>`;}).join("")+`</div>`;
+  m.innerHTML=html;
+  document.getElementById("bwAdd").onclick=()=>{const v=parseFloat(document.getElementById("bwInput").value);
+    if(!v||v<30||v>250){toast("Enter a valid weight");return;}
+    state.bw.push({date:today(),v:Math.round(v*10)/10});save();renderBW();toast("Logged 💪");};
+  m.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{state.bw.splice(+b.dataset.del,1);save();renderBW();});
+}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),1600);}
+
+document.getElementById("doneBtn").onclick=()=>{const d=DATA.find(x=>x.id===current);
+  let allDone=true;d.ex.forEach(e=>{ensure(e);if(!state.sets[e.id].d.every(x=>x))allDone=false;});
+  d.ex.forEach(e=>{state.sets[e.id].d=state.sets[e.id].d.map(()=>!allDone);});
+  save();renderDay();toast(allDone?"Cleared ✓":"All sets done 💪");};
+document.getElementById("resetBtn").onclick=()=>{const d=DATA.find(x=>x.id===current);
+  d.ex.forEach(e=>{ensure(e);state.sets[e.id].d=state.sets[e.id].d.map(()=>false);});
+  save();renderDay();toast("Day reset");};
+
+/* ===== TIMER with reliable audio (iOS unlock) ===== */
+let tSec=90,tLeft=90,tInt=null,tRunning=false,endTime=0,audioCtx=null,primed=false;
+const modal=document.getElementById("modal"),disp=document.getElementById("tdisplay");
+function fmt(s){s=Math.max(0,s);return Math.floor(s/60)+":"+String(s%60).padStart(2,"0");}
+function drawT(){disp.textContent=fmt(tLeft);}
+function unlockAudio(){
+  try{
+    if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==="suspended")audioCtx.resume();
+    if(!primed){const b=audioCtx.createBuffer(1,1,22050);const s=audioCtx.createBufferSource();s.buffer=b;s.connect(audioCtx.destination);s.start(0);primed=true;}
+  }catch(e){}
+}
+function beep(){
+  try{
+    if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==="suspended")audioCtx.resume();
+    const now=audioCtx.currentTime;
+    [0,0.28,0.56].forEach((t,i)=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+      o.connect(g);g.connect(audioCtx.destination);o.type="square";o.frequency.value=i===2?1175:880;
+      o.start(now+t);g.gain.setValueAtTime(0.0001,now+t);g.gain.exponentialRampToValueAtTime(0.45,now+t+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001,now+t+0.22);o.stop(now+t+0.24);});
+  }catch(e){}
+  if(navigator.vibrate)navigator.vibrate([350,150,350,150,450]);
+}
+document.getElementById("timerBtn").onclick=()=>{unlockAudio();modal.classList.add("show");tLeft=tSec;drawT();};
+document.getElementById("tclose").onclick=()=>{modal.classList.remove("show");clearInterval(tInt);tRunning=false;document.getElementById("tstart").textContent="Start";};
+document.querySelectorAll(".tpreset").forEach(b=>b.onclick=()=>{
+  unlockAudio();tSec=+b.dataset.sec;tLeft=tSec;drawT();clearInterval(tInt);tRunning=false;
+  document.getElementById("tstart").textContent="Start";
+  document.querySelectorAll(".tpreset").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");});
+document.getElementById("tstart").onclick=function(){
+  unlockAudio();
+  if(tRunning){clearInterval(tInt);tRunning=false;this.textContent="Start";return;}
+  if(tLeft<=0)tLeft=tSec;
+  endTime=Date.now()+tLeft*1000;tRunning=true;this.textContent="Pause";
+  tInt=setInterval(()=>{tLeft=Math.round((endTime-Date.now())/1000);drawT();
+    if(tLeft<=0){clearInterval(tInt);tRunning=false;document.getElementById("tstart").textContent="Start";tLeft=tSec;beep();toast("Rest done — go! 💪");}},250);
+};
+modal.onclick=e=>{if(e.target.id==="modal")document.getElementById("tclose").click();};
+
+/* ===== TRAINING LOG ===== */
+function saveSession(d){
+  const entry={date:today(), dayId:d.id, title:d.title,
+    exercises:d.ex.map(e=>{ensure(e);const o=state.sets[e.id];
+      return {name:e.n, target:e.s, sets:o.w.map((w,i)=>({weight:w||"-", done:!!o.d[i]}))};})};
+  // replace if a session for same date+day already exists, else add
+  const idx=state.history.findIndex(h=>h.date===entry.date&&h.dayId===entry.dayId);
+  if(idx>=0)state.history[idx]=entry; else state.history.push(entry);
+  save();toast("Saved to your log 💾");
+}
+function renderLog(){
+  document.getElementById("pwrap").style.display="none";
+  document.getElementById("doneBtn").style.display="none";
+  document.getElementById("resetBtn").style.display="none";
+  document.getElementById("timerBtn").style.display="none";
+  const m=document.getElementById("main");
+  let html=`<div class="daytitle">My Training Log <em>— track your progress</em></div>`;
+  html+=`<div class="bw-now" style="gap:9px;">
+    <button class="bw-add" id="expCsv" style="flex:1;">📥 Export CSV</button>
+    <button class="bw-add" id="expJson" style="flex:1;background:var(--card2);color:var(--txt);border:1px solid var(--line);">📦 Backup file</button></div>`;
+  if(!state.history.length){
+    html+=`<div class="empty">No saved workouts yet.<br><br>After a session, tap "Save this workout to my log" on any training day. Your weights and date get stored here so you can watch yourself get stronger.</div>`;
+  }else{
+    html+=`<div class="bw-list">`+[...state.history].reverse().map((h,i)=>{
+      const ri=state.history.length-1-i;
+      const lines=h.exercises.map(e=>{
+        const ws=e.sets.map(s=>s.weight).filter(x=>x&&x!=="-");
+        return `<div style="display:flex;justify-content:space-between;gap:10px;padding:4px 0;font-size:12.5px;">
+          <span style="color:var(--txt);">${e.name}</span>
+          <span style="color:var(--mut);white-space:nowrap;">${ws.length?ws.join(" · "):"—"}</span></div>`;
+      }).join("");
+      return `<div class="bw-item" style="flex-direction:column;align-items:stretch;gap:6px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-weight:700;color:var(--acc);">${h.title}</span>
+          <span class="d">${h.date} <button class="bw-del" data-del="${ri}">✕</button></span></div>
+        ${lines}</div>`;
+    }).join("")+`</div>`;
+  }
+  m.innerHTML=html;
+  document.getElementById("expCsv").onclick=exportCSV;
+  document.getElementById("expJson").onclick=exportJSON;
+  m.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{state.history.splice(+b.dataset.del,1);save();renderLog();});
+}
+function download(name,text,type){
+  const blob=new Blob([text],{type});const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();
+  setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},500);
+}
+function exportCSV(){
+  let rows=[["date","day","exercise","target","set","weight/reps","done"]];
+  state.history.forEach(h=>h.exercises.forEach(e=>e.sets.forEach((s,i)=>{
+    rows.push([h.date,h.title,e.name,e.target,"Set "+(i+1),s.weight,s.done?"yes":"no"]);})));
+  // also append bodyweight log
+  state.bw.forEach(b=>rows.push([b.date,"Bodyweight","-","-","-",b.v+" kg","-"]));
+  const csv=rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(",")).join("\n");
+  download("gkn-gym-log.csv",csv,"text/csv");toast("CSV exported 📥");
+}
+function exportJSON(){
+  download("gkn-gym-backup.json",JSON.stringify(state,null,2),"application/json");toast("Backup saved 📦");
+}
+
+load();
+</script>
+</body>
+</html>
